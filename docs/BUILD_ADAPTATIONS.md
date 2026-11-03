@@ -1,5 +1,11 @@
-# Export-only adaptations
+# Publication packaging
 
-Exact original algorithm and vendored code are byte-identical under runtime/. No parameter, target, route or fallback was changed. New files: Dockerfile source-rebuild recipe, scripts/install.sh and check_output.py, dependency/documentation locks and docs. Original Dockerfile preserved as Dockerfile.submitted. The omitted relocatable numeric-runtime is replaced only in the source reconstruction recipe by version-pinned package installation, without guaranteeing identical wheels, system libraries or eigenvector outputs. No old app wrapper is invoked. Historical dead candidate_reference.run branches reference live configs/joint_v2 but are unreachable from the frozen entry; these paths are not required or falsely supplied as enabled methods.
+The algorithm and bundled official code under `runtime/` retain their original bytes. Parameters, routing, output identifiers, and the submitted Dockerfile are unchanged.
 
-2026-11-03 revision: display/docs only renamed PrefixCast; runtime method remains QuantPrefixEW40V3. Source Docker recipe now explicitly labels public reconstruction, checks executable mode and runs pip check. Install wrapper accepts an explicit PYTHON interpreter and runs pip check. No dependency pin changed. Fresh-venv public EW40/B4 smoke succeeded; Docker recipe is still BLOCKED/UNBUILT. No submitted Dockerfile edits.
+The public reconstruction recipe installs the pinned numerical environment instead of copying the original relocatable Python environment. It checks dependency compatibility and the forecast entry's executable permission. The installation helper accepts an explicit Python interpreter. These are packaging changes, not modifications to the forecasting method.
+
+The source installation and two input cases were executed successfully as described in [release checks](RELEASE_CHECKS.md). The new Docker recipe remains unvalidated because the build environment could not reach a daemon. A source reconstruction is not expected to reproduce the original image digest byte for byte.
+
+The public name is PrefixCast. Original implementation labels remain in the frozen code and generated output; [the method specification](METHOD.md) maps them to descriptive component names. Historical module branches that the final entry never calls remain in place to preserve the verified runtime bytes. Their names do not define supported model-selection options.
+
+Historical path audits and export records are retained under [provenance](../provenance/README.md). They are not required by the forecast entry point.

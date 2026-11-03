@@ -1,20 +1,62 @@
-# Reproducibility and build scope
+# Reproducibility
 
-## Exact original image identity
+## Validated source environment
 
-`docker.io/xingyuzhang111/agenthon-t2@sha256:68b8c8bb61b27e44d1e70bfdc5aab28e701c342a078500c7e14d3c88ffa96055`
-Config ID `sha256:f8a69b6b181bc4676668dba0dbebc391d3d8af71dca73a5920cd4616863c3192`. linux/amd64, user65534:65534, no VOLUME, interface2.0. Existing anonymous FULL crane pull verified accepted config identity; this export did not contact registry or repeat pulls. Preserve the original TAR externally for offline image backup; neither public ZIP nor private evidence archive embeds it.
+The source checks used Linux/x86_64, Python 3.12.15, and the exact 22 packages in [the runtime lock](../configs/requirements-runtime.lock). Installation and `pip check` passed in a fresh virtual environment.
 
-The original Dockerfile is `docker/Dockerfile.submitted`, unchanged. Its base tag `agenthon-t2-base:python-f040863673ae-amd64` was a local pinned build reference; independently verifiable registry base digest UNKNOWN. It copies `/opt/numeric-runtime` (Python3.12.15) and runtime code. The outer base's inspect also contains Python3.13.16; the forecast shell selects the copied3.12 interpreter. Do not conflate it with the scoring/toolkit env3.13.16. Full original environment versions are in configs/submitted-environment.lock.json. Wheel provenance UNKNOWN where only installed dist-info remains; RECORD SHA is not a wheel SHA.
+Follow [the public example workflow](PUBLIC_EXAMPLE.md) for input acquisition, staging, prediction, and output checking. The same entry point automatically handles both example cases. The recorded runs used CPU, UID 65534, sampling seed 1, and read-only copies of the input files.
 
-## Source-based reconstruction (not bit-for-bit image reproduction)
+Each successful run produces 500 joint draws and the three documented output files. The default sampling seed is 1, configurable through `QFBENCH_SEED` or `--seed`. The tree component retains its fixed internal training seed of 1.
 
-Run README install/build commands. All model/interface source is supplied under runtime, official package bytes preserved. The minimal runtime closure requirements are pinned; no unknown qfbench2 PyPI package is installed. All22 pinned runtime dependencies were fetched directly from PyPI and installed successfully in a fresh Python3.12.15 venv on2026-11-03; `pip check` passed. No version was changed. Docker source-rebuild base digest and apt libgomp package revision are UNKNOWN; network package fetching is a rebuild dependency. `docker/Dockerfile` and install/check scripts are EXPORT-ONLY non-algorithm adapters, not files from the submitted image. Original algorithm files unchanged. No claim that this recipe produces the same registry manifest digest.
+## Public Docker reconstruction
 
-The initial export was static-only. This revised release actually installed exact dependencies and ran two public source forecasts as UID65534: native EW40 and B4 CPU fallback, both500draws/three outputs and official G0–G3 PASS. There was no realized-label scoring. Docker build was attempted using only this public directory as context and failed before building because no daemon was reachable. No new image ID exists and no new image forecast is claimed. Historical six-case and two strict-runtime image checks were not repeated. See RELEASE_CHECKS.md and evidence/PUBLIC_REBUILD_CHECKS.json.
+**This recipe has not been validated.** The recorded build attempts failed before building because the environment could not connect to a Docker daemon. There is no new image ID or image-run result.
 
-## Inputs and offline execution
+On a machine with Docker, first prepare the selected public input and source environment using [the example workflow](PUBLIC_EXAMPLE.md), then run:
 
-Only the current task's files may be mounted. Inputs readonly; output writable by uid65534. tmpfs64MiB/noexec/nosuid/nodev, readonlyroot, capability drop, PID/FD limits are in the README example. Card-specific resources/deadlines take precedence. CPU numeric code does not compute on GPU; binding one allowed GPU in old host checks only establishes device exposure. No `--gpus all`.
+```bash
+docker build --platform linux/amd64 -f docker/Dockerfile -t prefixcast:source .
 
-Seed1 default/QFBENCH_SEED, 500 draws, nthread1. Cross-backend eigenvector sign differences can alter finite draws; original content identity does not establish universal numerical identity. Historical supplied-vintage labels are not rigorous real-time-vintage proof. Final ranked roster/performance not certified by Development-like checks.
+UNIT=t2-F1-curve-ust1y-001-ps1
+INPUT="inputs/$UNIT"
+OUTPUT="out/docker/$UNIT"
+ASOF=$(.venv/bin/python -c 'import pathlib, sys, tomllib; print(tomllib.loads(pathlib.Path(sys.argv[1]).read_text())["provenance"]["data_cutoff"])' "$INPUT/card.toml")
+mkdir -p "$OUTPUT"
+chmod 777 "$OUTPUT"
+
+docker run --rm --network=none --read-only --user 65534:65534 \
+  --cap-drop=ALL --security-opt no-new-privileges \
+  --tmpfs /tmp:rw,noexec,nosuid,nodev,size=64m \
+  --pids-limit 256 --ulimit nofile=1024:1024 --ulimit nproc=256:256 \
+  --cpus 2 --memory 16G --memory-swap 16G -e QFBENCH_SEED=1 \
+  -v "$PWD/$INPUT:/input:ro" -v "$PWD/$OUTPUT:/output" \
+  prefixcast:source forecast --panels /input/panels/ --text /input/text/ \
+  --asof "$ASOF" --out /output/forecast.parquet
+
+.venv/bin/python scripts/check_output.py \
+  --card "$INPUT/card.toml" --forecast "$OUTPUT/forecast.parquet"
+```
+
+The dedicated output directory must be writable by UID 65534. Use each task card's applicable resource limits. Build-time downloads require network access; prediction is offline. GPU computation is not required.
+
+The public Dockerfile installs pinned packages and the system OpenMP runtime. Its base-image digest and apt package revision are not locked, and its environment is not guaranteed to reproduce the original image byte for byte.
+
+## Original submitted environment
+
+Original immutable image reference:
+
+```text
+docker.io/xingyuzhang111/agenthon-t2@sha256:68b8c8bb61b27e44d1e70bfdc5aab28e701c342a078500c7e14d3c88ffa96055
+```
+
+The original image is Linux/amd64 and uses UID 65534. [Dockerfile.submitted](../docker/Dockerfile.submitted) is preserved. Its local base tag is a historical build reference, not a verified public registry dependency.
+
+The submitted entry selects the copied Python 3.12.15 interpreter at `/opt/numeric-runtime/bin/python`. The outer base's Python version must not be confused with that numerical interpreter. [The submitted environment lock](../configs/submitted-environment.lock.json) records its packages.
+
+Historical anonymous-pull evidence identifies the original image; it is not a current availability check. Neither the source repository nor its ZIP embeds the original image TAR. See [final version](FINAL_VERSION.md) for the image config and ZIP hashes.
+
+## Numerical and validation limits
+
+Different BLAS/eigensolver backends can change finite seeded draws, including through eigenvector sign differences. Source identity does not imply universal bitwise prediction equality.
+
+The two recorded input cases are execution checks, not an independent reproduction of the sealed competition score. No new Docker or gVisor execution is claimed. Input cutoff checks do not independently establish every historical data vintage. See [evaluation](EVALUATION.md) and [release checks](RELEASE_CHECKS.md).

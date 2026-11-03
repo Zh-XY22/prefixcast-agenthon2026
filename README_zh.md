@@ -1,34 +1,60 @@
 # PrefixCast
 
-**Joint Financial Forecasting with EWMA Paths and Tree-Based Fallbacks**
+**基于指数加权联合路径与树模型回退的金融概率预测**
 
-队伍 **HaHaHa 获得 Agenthon 2026 Track 2 第二名**。2026-11-03 核对[官网 Final 榜单](https://www.agenthon.net/#leaderboard)，显示分数 **−0.9513**，越高越好。原参赛标识仍为 **QuantPrefixEW40V3**；`runtime/` 中算法、方法标识、参数、路由及输出语义均未修改。
+[English](README.md)
 
-用户已明确确认实际最终提交的整个 ZIP SHA256：`dedcc25dabb09e16304a4281e9feda5afa1e5a4b7cb5b7e391a75ef3737095ab`，与原归档一致。仍未发现归档的平台接收回执，submission ID 为 UNKNOWN。用户确认、官网队伍排名和单次提交回执是不同证据，不相互冒充。完整身份链见 [FINAL_VERSION](docs/FINAL_VERSION.md)。
+PrefixCast 是 HaHaHa 队伍在 **Agenthon 2026 Track 2 获得第二名的最终预测系统**。[官方 Final 榜单](https://www.agenthon.net/#leaderboard)显示分数 **−0.9513**，越高越好；核对日期为 2026-11-03。
 
-## 最终程序
+## 方法
 
-当前任务输入 → 适用范围检查 → EW40 联合路径；范围外或历史不足 → 原 CPU B4；B4 失败 → 官方 R0。EW40 只原生处理日频利率/G10外汇1–4步且满足历史条件的输入，不能把全部回退说成原生。500完整联合样本，默认seed1，可用 `QFBENCH_SEED`。无预装学习工件，不读文本，不调用House/外部模型；B4只在当前任务历史内拟合。
+整个系统只有一个预测入口，由程序根据当前任务自动选择执行路径：
 
-## 本轮真实复现检查
+| 组件 | 在最终系统中的作用 |
+|---|---|
+| 指数加权联合路径 | 对满足条件的日频利率和 G10 外汇短期任务，以 40 个观测步的半衰期估计协方差，进行 10% 对角收缩，再采样联合高斯增量路径。 |
+| 自回归树模型与残差块采样 | 对范围外的任务，或第一条路径无法执行的情况，在当前任务历史上拟合 XGBoost，并通过对齐的残差块生成预测样本。 |
+| 官方统计回退模型 | 树模型执行失败时使用随包提供的官方统计预测器；无效输入仍可能失败。 |
 
-新建 Python3.12.15 隔离环境，固定22项依赖全部从 PyPI 直连安装，`pip check`通过，未改版本。仅运行两个官方公开历史样例，均以UID65534、CPU执行：
+每次成功预测输出 **500 个联合样本**，覆盖所请求的资产和预测期限。仅使用当前任务提供的历史，使用 CPU，无需预训练权重或外部模型服务。文本参数为比赛接口所需，但最终方法不使用文本内容。
 
-|公开样例|日期/期限|实际路由|结果|
-|---|---|---|---|
-|t2-F1-curve-ust1y-001-ps1|2019-01-07，2/3步|EW40原生|500draws，三文件，G0–G3 PASS|
-|t2-F1-fx-krw-011-ps1|2017-03-27，1/4步|B4 CPU回退，实际拟合2次|500draws，三文件，G0–G3 PASS|
+**这些组件属于同一个最终方法，不是需要用户选择的几套实验。** 方法文档解释了原始代码标签、适用范围和具体公式。
 
-输入字节、日期和目标未改，未提供realized，未计算性能分数。**公开源码 Docker 构建已尝试，但当前容器无可连接daemon，退出1；没有新构建镜像，也没有新镜像内预测通过记录。** 新环境运行、历史原镜像验收与本轮Docker阻塞分别记录，见 [RELEASE_CHECKS](docs/RELEASE_CHECKS.md)。未重跑104题、未调参、未训练研究模型、未使用GPU、未发布上传。
+## 使用
 
-完整安装、forecast、输出检查、Docker命令见英文 [README](README.md)。安装入口 `sh scripts/install.sh`；Python不在PATH时可用 `PYTHON=/path/to/python3.12 sh scripts/install.sh`。公开配方为 `docker/Dockerfile`；原配方 `docker/Dockerfile.submitted` 保持不变。依赖获取需联网，推理可断网。源码重建不承诺获得原镜像digest。
+已验证的源码环境为 Linux/x86_64、Python 3.12.15 和固定版本依赖：
 
-## 目录和发布边界
+```bash
+sh scripts/install.sh
+# 如需指定解释器：PYTHON=/path/to/python3.12 sh scripts/install.sh
+```
 
-- `runtime/`：与原导出逐文件一致的最终实现及官方接口。
-- `configs/`：原版本/依赖锁与实际参数说明，未修改算法配置。
-- `docker/`、`scripts/`：公开重建与检查包装；不含账号操作。
-- `docs/`：方法、身份、复现、评价、数据与许可。
-- `evidence/`：公开身份及脱敏检查摘要，无原始私有日志或团队证明。
+按[公开样例流程](docs/PUBLIC_EXAMPLE.md)获取官方输入并运行。文档只有一套执行流程；两个可选输入分别用于检查同一程序的不同路径，不需要修改模型参数。
 
-自有代码MIT；第三方保留原许可与署名，其中官方共享toolkit为CC-BY-NC4.0，整个仓库不能统一宣称MIT。公开包不含生产ZIP、claim/proof、数据、权重、环境、TAR或论文私有归档。GitHub上传本目录内文件，勿上传同级validation或原private-evidence。历史公开回测分数与官网Final结果分开展示，不能相互换算。
+使用准备好的输入目录时，统一的预测命令为：
+
+```bash
+T2_PYTHON="$PWD/.venv/bin/python" ./runtime/forecast \
+  --panels "$INPUT/panels/" --text "$INPUT/text/" \
+  --asof "$ASOF" --out "$OUTPUT/forecast.parquet"
+```
+
+输出为 `forecast.parquet`、`forecast_meta.json` 和 `forecast_rationale.md`。实际执行路径记录在 rationale 和标准输出中。
+
+## 结果与复现
+
+新建 Python 环境中的联合路径样例和树模型样例均通过官方输出检查。这证明了对应案例的运行与格式兼容，不是新增预测性能评估。公开 Docker 配方尚未完成构建验证：此前构建因无法连接 Docker daemon 而未开始。
+
+- [完整方法与代码标签对应关系](docs/METHOD.md)
+- [官方结果及验证范围](docs/EVALUATION.md)
+- [环境与 Docker 复现说明](docs/REPRODUCIBILITY.md)
+- [数据与依赖来源](docs/DATA_AND_DEPENDENCIES.md)
+- [提交版本及原镜像身份](docs/FINAL_VERSION.md)
+
+## 目录
+
+`runtime/` 保存未修改的参赛实现；`configs/` 保存依赖与参数说明；`scripts/` 和 `docker/` 提供安装、检查与构建入口；`docs/` 介绍最终方法；`evidence/` 保存公开核验摘要；`provenance/` 集中保存文件哈希和历史追溯材料。
+
+对外名称统一为 PrefixCast。原始运行标识及代码中的历史标签保留，用于与提交版本对应。历史实验记录不作为额外方法或运行选项。
+
+自有代码及发布辅助程序采用 [MIT](LICENSE)。第三方代码保留其原许可证，其中官方共享 toolkit 为 CC-BY-NC-4.0；详见[第三方声明](THIRD_PARTY_NOTICES.md)。

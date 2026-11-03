@@ -1,12 +1,17 @@
-# PrefixCast
+# PrefixCast method
 
-**Joint Financial Forecasting with EWMA Paths and Tree-Based Fallbacks**
+PrefixCast is one forecasting program with automatic routing. Its public component names describe the algorithms; historical labels are retained in the frozen code and output logs for submission traceability.
 
-Publication display name only; original method identifier QuantPrefixEW40V3 and all runtime bytes are preserved.
+| Public component name | Label in the original implementation | Meaning |
+|---|---|---|
+| Exponentially weighted joint paths | `EW40`, `CurrentTaskEW40Joint` | Exponentially weighted covariance with a half-life of 40 historical increments. The number is a weighting parameter, not an experiment count or a 40-row window. |
+| Autoregressive trees with residual block sampling | `B4`, `B4_CPU original` | An internal candidate label for the XGBoost-based numerical route; it is not a standard algorithm name or a user-facing version. |
+| Official statistical fallback | `R0` | The bundled official statistical reference forecaster, used if the tree route fails. |
+| Complete submitted system | `QuantPrefixEW40V3` | The preserved original submission/runtime identifier; the public method name is PrefixCast. |
 
-# QuantPrefixEW40V3: exact frozen method
+The entry point tries joint paths on supported tasks, then the tree component if that attempt cannot run, and finally the official statistical fallback if the tree component fails. There is no command-line model selector. The public examples vary the input, not the implementation.
 
-This document describes the bytes in `runtime/`, matched file-by-file to `/opt/final-focus` in the accepted image. The old top-level app/ wrappers are not the submitted entry. No algorithm was redesigned for this export.
+All 131 runtime source/resource files remain byte-identical to the verified export of the submitted image. This document describes that final runtime.
 
 ## Inputs, targets and entry
 
@@ -16,13 +21,13 @@ Only supplied task history is used. Output is 500 complete joint samples `[N,A,H
 
 ## Routing and time semantics
 
-`forecast.py:predict`: native only when frequency is daily, metadata.asset_panel is `rates_daily` or `g10_fx_daily`, authored max(horizons)<=4, and `Axis.offsets()` support<=4. EM panel name `em_fx_ecb_daily` is outside this explicit whitelist and routes to B4. Assets/horizon counts are dynamic. The programme is NOT native EW40 on every task.
+`forecast.py:predict`: native only when frequency is daily, metadata.asset_panel is `rates_daily` or `g10_fx_daily`, authored max(horizons)<=4, and `Axis.offsets()` support<=4. EM panel name `em_fx_ecb_daily` is outside this explicit whitelist and routes to the tree component. Assets/horizon counts are dynamic. The joint-path component is therefore used only within this scope; other tasks are routed automatically.
 
 `quant_axis.py:Axis.build/offsets` preserves authored daily h for walk indices. Declared target_dates identify contract dates, not a reason to count the h-th nonmissing observation. Without declared dates it uses pandas BDay weekdays and explicitly does not infer source holiday calendars. A weekend/invalid explicit target causes refusal; it does not shift labels. This is a support limitation, not an exchange-calendar guarantee.
 
 `quant_axis.py:suffix`: align supplied assets by date, sort, reject duplicates, cut after last nonfinite joint row or date gap>5 calendar days, keep<=601 rows, require>=101 rows and the last row exactly asof. There is no backfill or joining withheld-history segments. `_series` selects only dates<=asof. Any native exception is logged before numerical fallback.
 
-## Native EW40, exact constants
+## Exponentially weighted joint paths
 
 `quant_axis.py:state` leaves level data additive, including negative yields. For target log_return the entry explicitly selects `input_kind='simple_return'`: requires values>-1 and forms cumulative log1p state; it subtracts the final historical cumulative state from output. It does NOT automatically detect FX price levels. Although Axis helper has a log-price branch, this entry does not select it. Contract semantics must therefore agree with this assumption; existing derived FX return tests supplied matching transformed input. Do not describe all price-level log-return contracts as proven supported.
 
@@ -35,22 +40,22 @@ Demeaning estimates covariance; it is NOT a forecast drift. scipy.linalg.eigh gi
 
 The ten-column feature helper also computes lag/volatility summaries, but base only consumes its covariance. `TENORS` and `structure=True` features are unused by this entry; there are no event/curve features hidden behind the name.
 
-## B4 numerical route
+## Autoregressive trees with residual block sampling
 
 `forecast.py:main` catches native exceptions and forces `T2_XGB_DEVICE=cpu`, then calls `candidate_reference.predict(...,'B4',{'depth':2,'rounds':32,'lag':5})`. `candidate_reference.run` and other candidate families in that historical module are NOT called; no external configs.json/joint_v2 is read on this path. These dormant branches are preserved byte-for-byte for provenance, not advertised as enabled models.
 
-History is resolved using official `_series`, monthly resolver and gap-aware differences; simple returns convert through official log_return_steps for cumulative log_return targets. Common anchors and>=60 joint steps are required. Cap120 monthly steps or504 daily. Refuse h path>512 and daily gaps>10 days; refuse a withheld-history gap after the latest realized differences. For B4, regress innovation vectors z, not levels.
+History is resolved using official `_series`, monthly resolver and gap-aware differences; simple returns convert through official log_return_steps for cumulative log_return targets. Common anchors and>=60 joint steps are required. Cap120 monthly steps or504 daily. Refuse h path>512 and daily gaps>10 days; refuse a withheld-history gap after the latest realized differences. This component regresses innovation vectors z, not levels.
 
 Feature at each training point is flattened previous5 innovation vectors plus last20 means, last20 standard deviations, last5 means. `fit_predict` requires adequate regression history and uses float32 features, XGBoost hist, CPU, depth2, 32 rounds, eta0.05, lambda10, squared-error objective, training seed1 and nthread1. Recursively predict each future innovation using its preceding predicted history. The caller's sampling seed controls residual resampling; it does not replace XGBoost's fixed training seed1.
 
-Hold out final64 daily or24 monthly innovations: first fit before that tail, recursively predict the tail, compute synchronized multiasset residuals, subtract the residual sample mean; second fit uses the full current prefix. `block_paths` draws common start indices across all assets, block length5 daily/3 monthly, concatenates blocks across future steps. Add the recursive innovation centres and block residuals, accumulate from current level anchor (zero for cumulative returns), and select each cell's resolved endpoint. This is runtime two-fit residual calibration, not prepacked learned weights. The original finite residual-block behavior is preserved: mean-centred residual rows do not force every finite sampled block/path to have zero realised drift. No later Circular/Centered/Scale repair is silently applied.
+Hold out final64 daily or24 monthly innovations: first fit before that tail, recursively predict the tail, compute synchronized multiasset residuals, subtract the residual sample mean; second fit uses the full current prefix. `block_paths` draws common start indices across all assets, block length5 daily/3 monthly, concatenates blocks across future steps. Add the recursive innovation centres and block residuals, accumulate from current level anchor (zero for cumulative returns), and select each cell's resolved endpoint. This is runtime two-fit residual calibration, not prepacked learned weights. The original finite residual-block behavior is preserved: mean-centred residual rows do not force every finite sampled block/path to have zero realised drift. No post-submission correction to this sampling behavior has been applied.
 
-## Official R0 route
+## Official statistical fallback
 
-Any B4 exception is recorded and calls vendored `cli._draw`. It uses gap-aware complete historical innovations, requires>=30 rows, empirical std/correlation with a PSD nudge. Daily level centre is the last observation, return centre is empirical drift*h; each daily requested h gets a new joint asset-normal draw scaled sqrt(h), so its cross-horizon structure differs from EW40. Monthly mode uses the official `_monthly_inputs`/horizons.py observation_periods and publication-lag resolver, shared monthly walk and original authored output h keys. It does not divide calendar-day h by21. Invalid monthly metadata is not fabricated; unresolved input errors can still exit nonzero. Fallback success is not native success, and no failure label is rewritten.
+Any exception from the tree component is recorded and calls vendored `cli._draw`. It uses gap-aware complete historical innovations, requires>=30 rows, empirical std/correlation with a PSD nudge. Daily level centre is the last observation, return centre is empirical drift*h; each daily requested h gets a new joint asset-normal draw scaled sqrt(h), so its cross-horizon structure differs from the joint-path component. Monthly mode uses the official `_monthly_inputs`/horizons.py observation_periods and publication-lag resolver, shared monthly walk and original authored output h keys. It does not divide calendar-day h by21. Invalid monthly metadata is not fabricated; unresolved input errors can still exit nonzero. Fallback success is not native success, and no failure label is rewritten.
 
 ## Determinism, fit boundary, limitations
 
-Default seed1, overridden by QFBENCH_SEED or --seed. Native covariance, B4 features, fitting and residual calibration use current input only; no cross-task state, late learned checkpoint or other task labels. No daily return/level unit rescaling is inferred beyond the specified transforms. Different BLAS/eigensolver backends may flip eigenvector signs and change finite seeded draws without changing covariance; do not promise cross-platform bitwise prediction equality. Dates/vintage assertions do not certify all historical data revisions were available then. Scope refusals, insufficient aligned history and numerical exceptions are observable in rationale/RELEASE_META. Output shape/finiteness is asserted; errors after fallback are not hidden.
+Default seed1, overridden by QFBENCH_SEED or --seed. Joint-path covariance, tree features, fitting and residual calibration use current input only; no cross-task state, late learned checkpoint or other task labels. No daily return/level unit rescaling is inferred beyond the specified transforms. Different BLAS/eigensolver backends may flip eigenvector signs and change finite seeded draws without changing covariance; do not promise cross-platform bitwise prediction equality. Dates/vintage assertions do not certify all historical data revisions were available then. Scope refusals, insufficient aligned history and numerical exceptions are observable in rationale/RELEASE_META. Output shape/finiteness is asserted; errors after fallback are not hidden.
 
-The complete final-program performance evidence is the small retrospective input-matched comparison in docs/EVALUATION.md. Historical 600-card EWMA or CatBoost results are not silently relabelled as this final entry. Toolkit/data licensing and contest eligibility are separate from schema/hash checks.
+The official Final result and current source-check scope are documented in [evaluation](EVALUATION.md). Earlier development comparisons remain in the [provenance archive](../provenance/README.md); they are not additional configurations of this released program.

@@ -1,11 +1,26 @@
-# Sources, dependencies and redistribution
+# Data and dependencies
 
-Use official historical practice inputs at fixed Track2 commit30c8019d997f930eab9ba569d089d12298d86d8c for old examples. The22 later short practice contracts were snapshot-verified at0ddb8896a942b9d44c64927f74755e7012c3e5f9 in historical compatibility reports. No latest clone was substituted for runtime source in this export. Public practice examples can be fetched separately under source terms; no task Parquet/text/realized labels are redistributed here. Never mount the whole history/task roster to one inference process.
+## Public example inputs
 
-Final-entry numerical estimates use only the task prefix. No offline model, training labels or per-task prediction cache is bundled. Historical research Treasury/ECB supplied-vintage evaluation is a separate research lineage, not proof every old revised value was known at asof. Do not copy data/license assumptions from code MIT license.
+The documented examples use the official Track 2 repository at commit `0ddb8896a942b9d44c64927f74755e7012c3e5f9`. Follow [the example workflow](PUBLIC_EXAMPLE.md) to obtain and stage a single task.
 
-Vendored official source is included at exact frozen bytes with MIT Track2 and CC-BY-NC4.0 toolkit notices. Software packages are identified by configs/DEPENDENCY_PROVENANCE.csv and full submitted environment lock. Minimal source-build install pins are configs/requirements-runtime.lock. Fetch binary packages from their named public distribution version using pip; verify download hashes if the wheel is in LOCAL_WHEEL_INVENTORY.csv. That inventory is NOT a claim all wheels belong to final closure. Missing wheel source/hash stays UNKNOWN. No wheels, environments, CUDA libraries or image TAR are shipped in the source ZIP.
+Task panels, text, and realized labels are not redistributed in this code repository. Their source terms apply separately from the code license. Preserve the source files and their manifests; mount only the selected task's inputs for inference.
 
-Construction may require network access for the Python base, libgomp1 and pinned wheels. Inference is entirely offline: network none, inputs readonly, output writable. No PAT, Team Key, registry login, House credential or external API key is needed for local source install/build/forecast. Contest publishing/account operations are deliberately absent from this public package.
+The final method estimates its numerical quantities from the supplied task prefix. It does not load pretrained weights, offline calibration tables, cross-task caches, or external model services. Input cutoff checks do not independently certify the historical vintage of every supplied observation.
 
-2026-11-03 release check: all22 exact runtime pins were available by direct PyPI download, installed without dependencies/version substitutions in a new venv, and passed `pip check`. No paid proxy was used. This tests Python-package availability on this Linux/x86_64 Python3.12 host, not availability of the Docker base/apt closure on every host. No binary package is included in the public ZIP.
+## Software
+
+- [Runtime dependency lock](../configs/requirements-runtime.lock): the packages needed by the public source installation.
+- [Submitted environment record](../configs/submitted-environment.lock.json): the original numerical environment.
+- [Dependency provenance](../configs/DEPENDENCY_PROVENANCE.csv): recorded package versions and license metadata.
+- [Local wheel inventory](../configs/LOCAL_WHEEL_INVENTORY.csv): historical file hashes where available; this is not a list of additional required packages.
+
+All 22 exact runtime pins installed from PyPI into a fresh Linux/x86_64 Python 3.12.15 environment on 2026-11-03, and `pip check` passed. No dependency versions were substituted. This does not verify installation on every operating system.
+
+The exact bundled official sources retain their Track 2 MIT and shared-toolkit CC-BY-NC-4.0 notices. See [third-party notices](../THIRD_PARTY_NOTICES.md) and the [official source version record](ORIGINAL_OFFICIAL_VERSION_LOCK.json). The original official repository also contains the dataset licensing and provenance documents referenced by its notices.
+
+## Network and system requirements
+
+Package installation and Docker reconstruction require network access. Inference itself runs offline on CPU and needs no API key or team credentials. The Docker recipe installs the system OpenMP runtime `libgomp1`; a source installation also needs a compatible system runtime available.
+
+No package wheels, virtual environments, CUDA libraries, datasets, or image TAR files are distributed here. See [reproducibility](REPRODUCIBILITY.md) for the original image and reconstruction limits.
