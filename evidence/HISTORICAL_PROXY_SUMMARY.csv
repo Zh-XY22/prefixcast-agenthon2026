@@ -1,0 +1,5 @@
+cohort,reference,metric,direction,A,reference_value,A_minus_reference,improvement_percent,n_labelled,n_total,distinct_dates,wins,failure_count,missing_labels,experiment_id
+historical_original_horizon,B4,input-derived local M0 proxy,lower,0.6425739790019003,0.6425739790019003,0.0,0.0,4,4,4,0,0,0,FINAL12-candidate vs FINAL12-B4
+historical_original_horizon,R0,input-derived local M0 proxy,lower,0.6425739790019003,0.8609968595864125,-0.2184228805845122,25.3686036310787,4,4,4,4,0,0,FINAL12-candidate vs FINAL12-R0
+historical_short_proxy,B4,input-derived local M0 proxy,lower,1.0572471091048135,1.1296258800207648,-0.07237877091595135,6.4073222998946235,3,4,2,3,0,1,FINAL12-candidate vs FINAL12-B4
+historical_short_proxy,R0,input-derived local M0 proxy,lower,1.0572471091048135,1.6163108784114024,-0.559063769306589,34.588876235001706,3,4,2,3,0,1,FINAL12-candidate vs FINAL12-R0

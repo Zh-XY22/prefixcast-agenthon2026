@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+here=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+if [ -x /opt/numeric-runtime/bin/python ]; then py=/opt/numeric-runtime/bin/python; else py=${T2_PYTHON:-python3}; fi
+export PYTHONPATH="$here:$here/official" PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+exec "$py" "$here/forecast.py" "$@"

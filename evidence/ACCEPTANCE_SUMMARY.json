@@ -1,0 +1,24 @@
+{
+  "nature": "NEW SANITIZED SUMMARY; not an original acceptance report",
+  "source_sha256": "922d11d0478467935630c33e2bf22cb84d29d8c48cb647c3f748c0cf1f0fad69",
+  "six_host_cases": {
+    "total": 6,
+    "EW40": 4,
+    "B4": 2,
+    "R0": 0,
+    "exit0": 6,
+    "G0_G3": "PASS",
+    "performance_scored": false
+  },
+  "strict_cases": {
+    "total": 2,
+    "EW40": 1,
+    "B4": 1,
+    "status": "PASS",
+    "source_sha256": "4a0dbe32dcffac30253d074968979e76f5b395e83b05a94cd663bf18848a1228"
+  },
+  "gvisor": "NOT_TESTED / UNKNOWN",
+  "Final_environment": "Not certified by Development-like checks",
+  "image_id": "sha256:f8a69b6b181bc4676668dba0dbebc391d3d8af71dca73a5920cd4616863c3192",
+  "new_tests_this_export": 0
+}

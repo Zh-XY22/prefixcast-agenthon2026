@@ -1,0 +1,40 @@
+{
+  "method": "QuantPrefixEW40V3",
+  "configuration_source": "runtime/forecast.py and quant_features.py; this JSON documents constants, not a new algorithm input",
+  "draws": 500,
+  "default_seed": 1,
+  "seed_environment": "QFBENCH_SEED",
+  "native_panels": [
+    "rates_daily",
+    "g10_fx_daily"
+  ],
+  "native_frequency": "daily",
+  "max_horizon": 4,
+  "minimum_continuous_rows": 101,
+  "maximum_suffix_rows": 601,
+  "covariance_changes": 300,
+  "half_life": 40,
+  "diagonal_shrinkage": 0.1,
+  "variance_eigenvalue_floor": 1e-12,
+  "center": "zero innovations",
+  "B4": {
+    "device": "cpu",
+    "depth": 2,
+    "rounds": 32,
+    "lag": 5,
+    "eta": 0.05,
+    "l2_lambda": 10,
+    "training_seed": 1,
+    "threads": 1,
+    "history_cap_daily": 504,
+    "history_cap_monthly": 120,
+    "residual_holdout_daily": 64,
+    "residual_holdout_monthly": 24,
+    "block_daily": 5,
+    "block_monthly": 3
+  },
+  "fallback": "B4 then official R0",
+  "learned_artifacts": [],
+  "House_called": false,
+  "text_used": false
+}

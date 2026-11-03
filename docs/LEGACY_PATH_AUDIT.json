@@ -1,0 +1,74 @@
+[
+  {
+    "path": "app/forecast.py",
+    "sha256": "4da234c78b5c9f2eb9d17169a90bdae4dd3d6f9ac204bd757a865bb5b8334ca5",
+    "used_by_final_entry": false,
+    "reason": "Final uses frozen runtime/forecast -> quant_axis/quant_features/candidate_reference.predict and vendored official cli; live wrappers/config-file loaders not called"
+  },
+  {
+    "path": "app/official_reasoning.py",
+    "sha256": "bdb6a6c0667f7fb943192eeb90f8d0f28441382bb784cd8f2c1c9342d040662d",
+    "used_by_final_entry": false,
+    "reason": "Final uses frozen runtime/forecast -> quant_axis/quant_features/candidate_reference.predict and vendored official cli; live wrappers/config-file loaders not called"
+  },
+  {
+    "path": "app/forecast",
+    "sha256": "534988719766f98cadcda4357293817a9282d02db245e8dda33e7e7d6014d834",
+    "used_by_final_entry": false,
+    "reason": "Final uses frozen runtime/forecast -> quant_axis/quant_features/candidate_reference.predict and vendored official cli; live wrappers/config-file loaders not called"
+  },
+  {
+    "path": "app/candidate.py",
+    "sha256": "4b69639707c0594ed3b19fc3b839852bf07ecaabf2c0fd5c36e5248afaeb9f3b",
+    "used_by_final_entry": false,
+    "reason": "Final uses frozen runtime/forecast -> quant_axis/quant_features/candidate_reference.predict and vendored official cli; live wrappers/config-file loaders not called"
+  },
+  {
+    "path": "app/joint_v2.py",
+    "sha256": "2aa0300bf113d4a65ab8d8b9e747222ca3ce0ab5d74d200e06aace7e7f79d2fe",
+    "used_by_final_entry": false,
+    "reason": "Final uses frozen runtime/forecast -> quant_axis/quant_features/candidate_reference.predict and vendored official cli; live wrappers/config-file loaders not called"
+  },
+  {
+    "path": "experiments/baseline_v1/configs.json",
+    "sha256": "235667e20330890920e91a8c189c65b0d80e50c6f7a99761d2406564fd636587",
+    "used_by_final_entry": false,
+    "reason": "Final uses frozen runtime/forecast -> quant_axis/quant_features/candidate_reference.predict and vendored official cli; live wrappers/config-file loaders not called"
+  },
+  {
+    "path": "experiments/baseline_v2/configs.json",
+    "sha256": "e106f31bfa4e7e0dbd5bad8b7aba40ba3a55bf2b508e80ad2d7023657091b83c",
+    "used_by_final_entry": false,
+    "reason": "Final uses frozen runtime/forecast -> quant_axis/quant_features/candidate_reference.predict and vendored official cli; live wrappers/config-file loaders not called"
+  },
+  {
+    "path": "experiments/baseline_v2/candidate_config.json",
+    "sha256": "13fd7af5e0e09a6102fa59ce133d420c81df61544e688c58b160688df89b98f9",
+    "used_by_final_entry": false,
+    "reason": "Final uses frozen runtime/forecast -> quant_axis/quant_features/candidate_reference.predict and vendored official cli; live wrappers/config-file loaders not called"
+  },
+  {
+    "path": "docker/Dockerfile",
+    "sha256": "86e7cf92ae7c77ef72c309bf8aa17187fe0555e2853ac09694506211833292fe",
+    "used_by_final_entry": false,
+    "reason": "Final uses frozen runtime/forecast -> quant_axis/quant_features/candidate_reference.predict and vendored official cli; live wrappers/config-file loaders not called"
+  },
+  {
+    "path": "docker/requirements.lock",
+    "sha256": "17cfa856f09e518ae35c905a8117764b377c4273573df5cd3861ce3d4d33a289",
+    "used_by_final_entry": false,
+    "reason": "Final uses frozen runtime/forecast -> quant_axis/quant_features/candidate_reference.predict and vendored official cli; live wrappers/config-file loaders not called"
+  },
+  {
+    "path": "reports/VERSION_LOCK.json",
+    "sha256": "bca16e80834b6d773c171b98553d6d91889718a292f6805a35660485410fd659",
+    "used_by_final_entry": false,
+    "reason": "Final uses frozen runtime/forecast -> quant_axis/quant_features/candidate_reference.predict and vendored official cli; live wrappers/config-file loaders not called"
+  },
+  {
+    "path": "scripts/t2_cli.py",
+    "sha256": "1f2cf9357246f0914eabcd003f13e095cd1cb027499de6b5e160b45a2bf2410d",
+    "used_by_final_entry": false,
+    "reason": "Final uses frozen runtime/forecast -> quant_axis/quant_features/candidate_reference.predict and vendored official cli; live wrappers/config-file loaders not called"
+  }
+]

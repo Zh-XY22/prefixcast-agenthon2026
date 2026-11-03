@@ -1,0 +1,57 @@
+{
+  "track2-forecasting-public": {
+    "origin": "https://github.com/Agenthon-2026/track2-forecasting-public",
+    "commit": "30c8019d997f930eab9ba569d089d12298d86d8c",
+    "tag": null,
+    "initial_branch": "main",
+    "fetched_at": "2026-10-09T14:34:42.844279+00:00",
+    "submodules": "",
+    "git_lfs_attributes": []
+  },
+  "Agenthon2026-public": {
+    "origin": "https://github.com/Agenthon-2026/Agenthon2026-public",
+    "commit": "bd01548e34d21fd660d88fd06157078fb25ece4e",
+    "tag": "v2.6.0",
+    "initial_branch": "main",
+    "fetched_at": "2026-10-09T14:34:42.844279+00:00",
+    "submodules": "",
+    "git_lfs_attributes": []
+  },
+  "environment": {
+    "python": "3.13.16",
+    "packages": {
+      "packaging": "26.3",
+      "setuptools": "84.0.0",
+      "wheel": "0.47.0",
+      "pip": "26.2.1",
+      "pytz": "2026.5",
+      "urllib3": "2.8.0",
+      "tzdata": "2026.5",
+      "six": "1.17.0",
+      "rpds-py": "2026.9.1",
+      "Pygments": "2.21.0",
+      "pyarrow": "18.1.0",
+      "pluggy": "1.6.0",
+      "numpy": "2.1.3",
+      "iniconfig": "2.3.1",
+      "idna": "3.20",
+      "charset-normalizer": "3.5.2",
+      "certifi": "2026.7.22",
+      "attrs": "26.1.0",
+      "scipy": "1.14.1",
+      "requests": "2.34.2",
+      "referencing": "0.37.0",
+      "python-dateutil": "2.9.0.post0",
+      "pytest": "9.1.1",
+      "pandas": "2.2.3",
+      "jsonschema-specifications": "2025.9.1",
+      "jsonschema": "4.23.0",
+      "qfbench2-common": "2.6.0",
+      "qfbench2-track-forecasting": "3.1.0"
+    }
+  },
+  "docker_cli": {
+    "version": "28.5.1",
+    "source": "https://download.docker.com/linux/static/stable/x86_64/docker-28.5.1.tgz"
+  }
+}

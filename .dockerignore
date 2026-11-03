@@ -1,0 +1,7 @@
+**
+!runtime/
+!runtime/**
+!configs/
+!configs/requirements-runtime.lock
+!docker/
+!docker/Dockerfile

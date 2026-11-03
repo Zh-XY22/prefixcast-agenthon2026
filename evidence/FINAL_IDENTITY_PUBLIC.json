@@ -1,0 +1,38 @@
+{
+  "method": "QuantPrefixEW40V3",
+  "team_number": 718,
+  "github_registration_account": "Zh-XY22 (USER_PROVIDED)",
+  "registered_comment": "https://github.com/Agenthon-2026/track2-forecasting-public/issues/4#issuecomment-6411523391",
+  "registration_comment_verification": "USER_PROVIDED; anonymous rendered issue page did not expose target comment; no authenticated account accessed",
+  "zip_sha256": "dedcc25dabb09e16304a4281e9feda5afa1e5a4b7cb5b7e391a75ef3737095ab",
+  "candidate_code_fingerprint": "12cf45dcc90cc5c347d2395a5344c5f2a238719a63d329af3996569ab01c6bf3",
+  "image_config_id": "sha256:f8a69b6b181bc4676668dba0dbebc391d3d8af71dca73a5920cd4616863c3192",
+  "registry_manifest_digest": "sha256:68b8c8bb61b27e44d1e70bfdc5aab28e701c342a078500c7e14d3c88ffa96055",
+  "image_reference": "docker.io/xingyuzhang111/agenthon-t2@sha256:68b8c8bb61b27e44d1e70bfdc5aab28e701c342a078500c7e14d3c88ffa96055",
+  "platform_receipt": "NOT_FOUND_IN_ARCHIVE",
+  "submission_id": "UNKNOWN",
+  "platform_score": -0.9513,
+  "status": "USER_CONFIRMED_SUBMITTED_ZIP_AND_OFFICIAL_TEAM_FINAL_RANK_VERIFIED",
+  "runtime_files_byte_matched_to_image": 131,
+  "frozen_files_verified": 7650,
+  "display_name": "PrefixCast",
+  "subtitle": "Joint Financial Forecasting with EWMA Paths and Tree-Based Fallbacks",
+  "team_name": "HaHaHa",
+  "zip_submission_confirmation": {
+    "status": "USER_CONFIRMED_ACTUALLY_SUBMITTED",
+    "confirmed_on": "2026-11-03",
+    "scope": "whole ZIP SHA256, not image or source digest"
+  },
+  "official_final_result": {
+    "track": "T2 Forecasting",
+    "team": "HaHaHa",
+    "rank": 2,
+    "displayed_score": "-0.9513",
+    "score_direction": "higher is better",
+    "leaderboard_url": "https://www.agenthon.net/#leaderboard",
+    "section": "T2 Forecasting — Final results; published after verification",
+    "verified_at_utc": "2026-11-03T03:42:01.843037+00:00",
+    "official_html_sha256": "cb88d8b0c766ab7004759abc1f7e05507c19a35e6c78c2d3aa86a921f3d71f0a",
+    "scope": "public team-level result; no per-submission or per-task receipt recovered"
+  }
+}

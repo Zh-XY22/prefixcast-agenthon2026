@@ -1,0 +1,101 @@
+{
+  "checked_at_utc": "2026-11-03T03:42:01.843037+00:00",
+  "scope": "new public-source runtime in fresh Python3.12.15 venv; NOT a rebuilt Docker image",
+  "dependency_install": "PASS; exact configs/requirements-runtime.lock from direct https://pypi.org/simple; no proxy; no version substitution",
+  "pip_check": "PASS",
+  "user": 65534,
+  "sampling_seed": 1,
+  "gpu_computation": false,
+  "performance_scored": false,
+  "docker_build": {
+    "status": "BLOCKED",
+    "attempt_exit_code": 1,
+    "reason": "Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?",
+    "new_image_id": null,
+    "original_final_image_unchanged": true,
+    "final_recipe_attempt_exit_code": 1,
+    "attempts": 2
+  },
+  "cases": [
+    {
+      "task_id": "t2-F1-curve-ust1y-001-ps1",
+      "source_commit": "0ddb8896a942b9d44c64927f74755e7012c3e5f9",
+      "card_sha256": "74eb07299d3915c7c501a8bb56cb78de63e9bb169d3b892a3fff7d48137e1350",
+      "forecast_spec_sha256": "5b4d68da70d73adec47dbcea245e0d1bd21329b166be66e82fa29682af9f2835",
+      "asof": "2019-01-07",
+      "route": "EW40",
+      "exit_code": 0,
+      "seconds": 0.8536879299208522,
+      "shape": [
+        500,
+        1,
+        2
+      ],
+      "output_files": [
+        "forecast.parquet",
+        "forecast_meta.json",
+        "forecast_rationale.md"
+      ],
+      "output_hashes": {
+        "forecast.parquet": "6e80c11cd8afbdef2c59cc551fcb9561119086a7f1d5e7185f0448c32ac8024b",
+        "forecast_meta.json": "6e95774b5ca1a710758961ff291acea2b0cd0ced14030d6c1f536c97e1fb9d62",
+        "forecast_rationale.md": "53d9f12e679398b6dabfcef5eb3b0d88541f2f1cefe45a47c66c667641e6feff"
+      },
+      "runtime_cpu_fit_calls": 0,
+      "gate_exit_code": 0,
+      "official_gate_result": {
+        "card_id": "t2-F1-curve-ust1y-001-ps1",
+        "admissible": true,
+        "gates": {
+          "g0_integrity": "pass",
+          "g1_schema": "pass",
+          "g2_cutoff_resource": "pass",
+          "g3_domain_semantics": "pass"
+        },
+        "scored": false,
+        "note": "no --realized supplied: gates only, no score"
+      },
+      "date_or_target_changed": false
+    },
+    {
+      "task_id": "t2-F1-fx-krw-011-ps1",
+      "source_commit": "0ddb8896a942b9d44c64927f74755e7012c3e5f9",
+      "card_sha256": "6bbb70c0d27c8104934390e1c6ac32efccdf10a08909c085bb57945884de7b6b",
+      "forecast_spec_sha256": "bb281fa5021b2615d0dd7c7f678d0aa22f3afc50ff39746df6b1df7c92d2285f",
+      "asof": "2017-03-27",
+      "route": "B4",
+      "exit_code": 0,
+      "seconds": 1.1779005168937147,
+      "shape": [
+        500,
+        1,
+        2
+      ],
+      "output_files": [
+        "forecast.parquet",
+        "forecast_meta.json",
+        "forecast_rationale.md"
+      ],
+      "output_hashes": {
+        "forecast.parquet": "2563afe7cb6ee9b4e31c97813bdf52d6c714d9ad89197875e702a29c31062a12",
+        "forecast_meta.json": "64d2791d6e25f55fb95277dcd1c37f659ebd064971ce0d84115f07933cb64443",
+        "forecast_rationale.md": "0403af7dfc5330a80367414167fda17f9de7d642073b69238cdb0f1f6453b619"
+      },
+      "runtime_cpu_fit_calls": 2,
+      "gate_exit_code": 0,
+      "official_gate_result": {
+        "card_id": "t2-F1-fx-krw-011-ps1",
+        "admissible": true,
+        "gates": {
+          "g0_integrity": "pass",
+          "g1_schema": "pass",
+          "g2_cutoff_resource": "pass",
+          "g3_domain_semantics": "pass"
+        },
+        "scored": false,
+        "note": "no --realized supplied: gates only, no score"
+      },
+      "date_or_target_changed": false
+    }
+  ]
+}
